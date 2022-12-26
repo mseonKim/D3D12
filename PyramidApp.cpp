@@ -70,7 +70,7 @@ private:
     POINT mLastMousePos;
 };
 
-
+#ifdef CH6
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
     PSTR cmdLine, int showCmd)
 {
@@ -93,6 +93,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         return 0;
     }
 }
+#endif
 
 PyramidApp::PyramidApp(HINSTANCE hInstance)
     : D3DApp(hInstance)
