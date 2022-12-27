@@ -2,6 +2,7 @@
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
 
+#ifdef CH6
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -70,7 +71,6 @@ private:
     POINT mLastMousePos;
 };
 
-#ifdef CH6
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
     PSTR cmdLine, int showCmd)
 {
@@ -93,7 +93,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         return 0;
     }
 }
-#endif
 
 PyramidApp::PyramidApp(HINSTANCE hInstance)
     : D3DApp(hInstance)
@@ -422,3 +421,4 @@ void PyramidApp::OnMouseMove(WPARAM btnState, int x, int y)
     mLastMousePos.x = x;
     mLastMousePos.y = y;
 }
+#endif
