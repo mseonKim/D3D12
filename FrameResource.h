@@ -43,6 +43,9 @@ struct Vertex
     DirectX::XMFLOAT4 Color;
 #endif
     DirectX::XMFLOAT3 Normal;
+#ifdef CH9
+    DirectX::XMFLOAT2 TexC;
+#endif
 };
 
 // Stores the resources needed for the CPU to build the command lists
