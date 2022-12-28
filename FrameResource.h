@@ -29,6 +29,11 @@ struct PassConstants
 
     DirectX::XMFLOAT4 AmbientLight = { 0.0f, 0.0f, 0.0f, 1.0f };
 
+    DirectX::XMFLOAT4 FogColor = { 0.7f, 0.7f, 0.7f, 1.0f };
+    float gFogStart = 5.0f;
+    float gFogRange = 150.0f;
+    DirectX::XMFLOAT2 cbPerObjectPad2;
+
     // Indices [0, NUM_DIR_LIGHTS) are directional lights;
     // indices [NUM_DIR_LIGHTS, NUM_DIR_LIGHTS+NUM_POINT_LIGHTS) are point lights;
     // indices [NUM_DIR_LIGHTS+NUM_POINT_LIGHTS, NUM_DIR_LIGHTS+NUM_POINT_LIGHT+NUM_SPOT_LIGHTS)
@@ -38,14 +43,18 @@ struct PassConstants
 
 struct Vertex
 {
+    Vertex() = default;
+    Vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v) :
+        Pos(x, y, z),
+        Normal(nx, ny, nz),
+        TexC(u, v) {}
+
     DirectX::XMFLOAT3 Pos;
 #ifdef CH7
     DirectX::XMFLOAT4 Color;
 #endif
     DirectX::XMFLOAT3 Normal;
-#ifdef CH9
     DirectX::XMFLOAT2 TexC;
-#endif
 };
 
 // Stores the resources needed for the CPU to build the command lists
@@ -56,6 +65,7 @@ public:
 
     FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount);
     FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT materialCount);
+    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT materialCount, UINT waveVertCount);
     FrameResource(const FrameResource& rhs) = delete;
     FrameResource& operator=(const FrameResource& rhs) = delete;
     ~FrameResource();
@@ -70,6 +80,10 @@ public:
     std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
     std::unique_ptr<UploadBuffer<MaterialConstants>> MaterialCB = nullptr;
     std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
+
+    // We cannot update a dynamic vertex buffer until the GPU is done processing
+    // the commands that reference it.  So each frame needs their own.
+    std::unique_ptr<UploadBuffer<Vertex>> WavesVB = nullptr;
 
     // Fence value to mark commands up to this fence point.  This lets us
     // check if these frame resources are still in use by the GPU.
