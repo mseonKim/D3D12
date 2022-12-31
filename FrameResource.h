@@ -4,7 +4,7 @@
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
 
-#define INSTANCING
+//#define INSTANCING
 
 struct InstanceData
 {
