@@ -1,14 +1,9 @@
-/*
- * Compute Shader는 길이가 [1,10] 구간인 3차원 벡터 64개를 담은 구조적 버퍼를 입력받아서 그 벡터들의 길이를 계산하고,
- * 계산 결과를 하나의 부동소수점 버퍼에 출력한다.
- * 응용프로그램은 그 결과를 시스템 메모리에 복사해서 파일에 저장한다.
- * 실행하고 파일에 기록된 모든 길이가 실제로 [1,10] 구간인지 검증하라.
- */
-
 #include "../../Common/d3dApp.h"
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
 #include "../../Common/GeometryGenerator.h"
+#include <random>
+#include <chrono>
 
 #ifdef CH13_EX1
 
@@ -207,7 +202,10 @@ void CH13Exercise1App::BuildResources()
     
     for (int i = 0; i < numElements; i++)
     {
-        data[i].v = XMFLOAT3(i, i, i);
+        std::mt19937_64 rng1(i);
+        std::uniform_int_distribution<__int64> dist1(1, 10);
+        int r = dist1(rng1);
+        data[i].v = XMFLOAT3(r, r, r);
     }
 
     const UINT64 byteSize = data.size() * sizeof(Data);
