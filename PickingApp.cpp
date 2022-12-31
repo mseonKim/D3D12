@@ -9,7 +9,7 @@
 #include "../../Common/Camera.h"
 #include "FrameResource.h"
 
-#ifdef CH17	// NOTE: Turn off INSTANCING macro in FrameResource.h
+#ifdef CH17	// NOTE: Remove INSTANCING macro in FrameResource.h
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;

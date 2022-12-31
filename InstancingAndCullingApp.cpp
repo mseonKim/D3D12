@@ -9,7 +9,7 @@
 #include "../../Common/Camera.h"
 #include "FrameResource.h"
 
-#ifdef CH16
+#ifdef CH16 // NOTE : Activate INSTANCING macro in FrameResource.h
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
