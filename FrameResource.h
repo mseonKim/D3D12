@@ -4,7 +4,8 @@
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
 
-//#define INSTANCING
+//#define INSTANCING    // Activate this only when you test CH16
+#define SHADOW  // Activate this only when you test CH20+
 
 struct InstanceData
 {
@@ -34,6 +35,9 @@ struct PassConstants
     DirectX::XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
     DirectX::XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
     DirectX::XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
+#ifdef SHADOW
+    DirectX::XMFLOAT4X4 ShadowTransform = MathHelper::Identity4x4();
+#endif
     DirectX::XMFLOAT3 EyePosW = { 0.0f, 0.0f, 0.0f };
     float cbPerObjectPad1 = 0.0f;
     DirectX::XMFLOAT2 RenderTargetSize = { 0.0f, 0.0f };
