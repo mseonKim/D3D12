@@ -5,8 +5,8 @@
 #include "../../Common/UploadBuffer.h"
 
 //#define INSTANCING    // Activate this only when you test CH16
-#define SHADOW  // Activate this only when you test CH20+
-#define SSAO    // Activate this only when you test CH21
+//#define SHADOW  // Activate this only when you test CH20, CH21
+//#define SSAO    // Activate this only when you test CH21
 
 struct InstanceData
 {
