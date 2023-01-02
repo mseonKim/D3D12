@@ -6,6 +6,7 @@
 
 //#define INSTANCING    // Activate this only when you test CH16
 #define SHADOW  // Activate this only when you test CH20+
+#define SSAO    // Activate this only when you test CH21
 
 struct InstanceData
 {
@@ -35,6 +36,9 @@ struct PassConstants
     DirectX::XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
     DirectX::XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
     DirectX::XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
+#ifdef SSAO
+    DirectX::XMFLOAT4X4 ViewProjTex = MathHelper::Identity4x4();
+#endif
 #ifdef SHADOW
     DirectX::XMFLOAT4X4 ShadowTransform = MathHelper::Identity4x4();
 #endif
@@ -49,16 +53,35 @@ struct PassConstants
 
     DirectX::XMFLOAT4 AmbientLight = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-    DirectX::XMFLOAT4 FogColor = { 0.7f, 0.7f, 0.7f, 1.0f };
-    float gFogStart = 5.0f;
-    float gFogRange = 150.0f;
-    DirectX::XMFLOAT2 cbPerObjectPad2;
-
     // Indices [0, NUM_DIR_LIGHTS) are directional lights;
     // indices [NUM_DIR_LIGHTS, NUM_DIR_LIGHTS+NUM_POINT_LIGHTS) are point lights;
     // indices [NUM_DIR_LIGHTS+NUM_POINT_LIGHTS, NUM_DIR_LIGHTS+NUM_POINT_LIGHT+NUM_SPOT_LIGHTS)
     // are spot lights for a maximum of MaxLights per object.
     Light Lights[MaxLights];
+
+    DirectX::XMFLOAT4 FogColor = { 0.7f, 0.7f, 0.7f, 1.0f };
+    float gFogStart = 5.0f;
+    float gFogRange = 150.0f;
+    DirectX::XMFLOAT2 cbPerObjectPad2;
+};
+
+struct SsaoConstants
+{
+    DirectX::XMFLOAT4X4 Proj;
+    DirectX::XMFLOAT4X4 InvProj;
+    DirectX::XMFLOAT4X4 ProjTex;
+    DirectX::XMFLOAT4   OffsetVectors[14];
+
+    // For SsaoBlur.hlsl
+    DirectX::XMFLOAT4 BlurWeights[3];
+
+    DirectX::XMFLOAT2 InvRenderTargetSize = { 0.0f, 0.0f };
+
+    // Coordinates given in view space.
+    float OcclusionRadius = 0.5f;
+    float OcclusionFadeStart = 0.2f;
+    float OcclusionFadeEnd = 2.0f;
+    float SurfaceEpsilon = 0.05f;
 };
 
 struct MaterialData
@@ -87,10 +110,11 @@ struct Vertex
     DirectX::XMFLOAT3 Pos;
 #ifdef CH7
     DirectX::XMFLOAT4 Color;
-#endif
+#else
     DirectX::XMFLOAT3 Normal;
     DirectX::XMFLOAT2 TexC;
     DirectX::XMFLOAT3 TangentU;
+#endif
 };
 
 // Stores the resources needed for the CPU to build the command lists
@@ -118,14 +142,15 @@ public:
     // that reference it.  So each frame needs their own cbuffers.
    // std::unique_ptr<UploadBuffer<FrameConstants>> FrameCB = nullptr;
     std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
-    std::unique_ptr<UploadBuffer<MaterialConstants>> MaterialCB = nullptr;
     std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
+    std::unique_ptr<UploadBuffer<SsaoConstants>> SsaoCB = nullptr;
 
+    std::unique_ptr<UploadBuffer<MaterialData>> MaterialBuffer = nullptr;
+
+    std::unique_ptr<UploadBuffer<MaterialConstants>> MaterialCB = nullptr;
     // We cannot update a dynamic vertex buffer until the GPU is done processing
     // the commands that reference it.  So each frame needs their own.
     std::unique_ptr<UploadBuffer<Vertex>> WavesVB = nullptr;
-
-    std::unique_ptr<UploadBuffer<MaterialData>> MaterialBuffer = nullptr;
 
 #ifdef INSTANCING
     // NOTE: In this demo, we instance only one render-item, so we only have one structured buffer to 
