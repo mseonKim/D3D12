@@ -1,8 +1,13 @@
 # D3D12_Study
 
+## Introduction
 This repository is based on [D3D12Book Examples](https://github.com/d3dcoder/d3d12book).
+
 Clone 'Common' and 'Textures' Directory from above link and unzip this code to the same root folder.
+
 Modify CH[N] macro in Chapter.h to test. (CH6 - CH23)
+
+## Samples
 
 ### CH6. Box App (Drawing in Direct 3D)
 ### CH7. Shapes App (Drawing in Direct 3D Part 2)
