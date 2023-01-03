@@ -5,8 +5,8 @@
 #include "../../Common/UploadBuffer.h"
 
 //#define INSTANCING    // Activate this only when you test CH16
-//#define SHADOW  // Activate this only when you test CH20, CH21
-//#define SSAO    // Activate this only when you test CH21
+#define SHADOW  // Activate this only when you test CH20, CH21, CH23
+#define SSAO    // Activate this only when you test CH21, CH23
 
 struct InstanceData
 {
@@ -26,6 +26,11 @@ struct ObjectConstants
     UINT     ObjPad0;
     UINT     ObjPad1;
     UINT     ObjPad2;
+};
+
+struct SkinnedConstants
+{
+    DirectX::XMFLOAT4X4 BoneTransforms[96];
 };
 
 struct PassConstants
@@ -117,6 +122,16 @@ struct Vertex
 #endif
 };
 
+struct SkinnedVertex
+{
+    DirectX::XMFLOAT3 Pos;
+    DirectX::XMFLOAT3 Normal;
+    DirectX::XMFLOAT2 TexC;
+    DirectX::XMFLOAT3 TangentU;
+    DirectX::XMFLOAT3 BoneWeights;
+    BYTE BoneIndices[4];
+};
+
 // Stores the resources needed for the CPU to build the command lists
 // for a frame.  
 struct FrameResource
@@ -124,11 +139,15 @@ struct FrameResource
 public:
 
     FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount);
-    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT materialCount, UINT waveVertCount);
 #ifdef INSTANCING
     FrameResource(ID3D12Device* device, UINT passCount, UINT maxInstanceCount, UINT materialCount);
 #else
     FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT materialCount);
+#endif
+#ifdef WAVE
+    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT materialCount, UINT waveVertCount);
+#else
+    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT skinnedObjectCount, UINT materialCount);
 #endif
     FrameResource(const FrameResource& rhs) = delete;
     FrameResource& operator=(const FrameResource& rhs) = delete;
@@ -143,6 +162,7 @@ public:
    // std::unique_ptr<UploadBuffer<FrameConstants>> FrameCB = nullptr;
     std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
     std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
+    std::unique_ptr<UploadBuffer<SkinnedConstants>> SkinnedCB = nullptr;
     std::unique_ptr<UploadBuffer<SsaoConstants>> SsaoCB = nullptr;
 
     std::unique_ptr<UploadBuffer<MaterialData>> MaterialBuffer = nullptr;

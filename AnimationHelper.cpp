@@ -4,6 +4,8 @@
 
 #include "AnimationHelper.h"
 
+#ifdef CH22
+
 using namespace DirectX;
 
 Keyframe::Keyframe()
@@ -81,3 +83,4 @@ void BoneAnimation::Interpolate(float t, XMFLOAT4X4& M)const
 		}
 	}
 }
+#endif

@@ -7,7 +7,10 @@
 #ifndef ANIMATION_HELPER_H
 #define ANIMATION_HELPER_H
 
+#include "Chapter.h"
 #include "../../Common/d3dUtil.h"
+
+#ifdef CH22
 
 ///<summary>
 /// A Keyframe defines the bone transformation at an instant in time.
@@ -41,4 +44,5 @@ struct BoneAnimation
 
 };
 
+#endif
 #endif // ANIMATION_HELPER_H
