@@ -8,11 +8,12 @@
 //   Hold the right mouse button down and move the mouse to zoom in and out.
 //***************************************************************************************
 
+#include "Chapter.h"
 #include "../../Common/d3dApp.h"
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
 
-#ifdef CH5
+#ifdef CH6
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -81,7 +82,6 @@ private:
     POINT mLastMousePos;
 };
 
-#ifdef CH5
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				    PSTR cmdLine, int showCmd)
 {
@@ -104,7 +104,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         return 0;
     }
 }
-#endif
 
 BoxApp::BoxApp(HINSTANCE hInstance)
 : D3DApp(hInstance) 
@@ -353,7 +352,7 @@ void BoxApp::BuildRootSignature()
 void BoxApp::BuildShadersAndInputLayout()
 {
     HRESULT hr = S_OK;
-    
+
 	mvsByteCode = d3dUtil::CompileShader(L"Shaders\\color.hlsl", nullptr, "VS", "vs_5_0");
 	mpsByteCode = d3dUtil::CompileShader(L"Shaders\\color.hlsl", nullptr, "PS", "ps_5_0");
 

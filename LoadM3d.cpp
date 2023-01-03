@@ -1,5 +1,5 @@
 #include "LoadM3d.h"
- 
+ #ifdef CH23
 using namespace DirectX;
 
 bool M3DLoader::LoadM3d(const std::string& filename, 
@@ -255,3 +255,4 @@ void M3DLoader::ReadBoneKeyframes(std::ifstream& fin, UINT numBones, BoneAnimati
 
     fin >> ignore; // }
 }
+#endif

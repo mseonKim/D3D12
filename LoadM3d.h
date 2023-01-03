@@ -2,7 +2,7 @@
 #define LOADM3D_H
 
 #include "SkinnedData.h"
-
+#ifdef CH23
 
 
 class M3DLoader
@@ -74,5 +74,5 @@ private:
 };
 
 
-
+#endif
 #endif // LOADM3D_H

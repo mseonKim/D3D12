@@ -2,6 +2,7 @@
 // StencilApp.cpp by Frank Luna (C) 2015 All Rights Reserved.
 //***************************************************************************************
 
+#include "Chapter.h"
 #include "../../Common/d3dApp.h"
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
@@ -695,9 +696,9 @@ void StencilApp::BuildShadersAndInputLayout()
 		NULL, NULL
 	};
 
-	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_0");
-	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", defines, "PS", "ps_5_0");
-	mShaders["alphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", alphaTestDefines, "PS", "ps_5_0");
+	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\SimpleDefault.hlsl", nullptr, "VS", "vs_5_0");
+	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\SimpleDefault.hlsl", defines, "PS", "ps_5_0");
+	mShaders["alphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\SimpleDefault.hlsl", alphaTestDefines, "PS", "ps_5_0");
 	
     mInputLayout =
     {

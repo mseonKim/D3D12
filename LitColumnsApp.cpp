@@ -1,6 +1,8 @@
 //***************************************************************************************
 // LitColumnsApp.cpp by Frank Luna (C) 2015 All Rights Reserved.
 //***************************************************************************************
+
+#include "Chapter.h"
 #include "../../Common/d3dApp.h"
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
@@ -480,8 +482,8 @@ void LitColumnsApp::BuildShadersAndInputLayout()
 		NULL, NULL
 	};
 
-	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\CH8\\Default.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\CH8\\Default.hlsl", nullptr, "PS", "ps_5_1");
 	
     mInputLayout =
     {

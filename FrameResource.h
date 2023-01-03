@@ -1,12 +1,9 @@
 #pragma once
 
+#include "Chapter.h"
 #include "../../Common/d3dUtil.h"
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
-
-//#define INSTANCING    // Activate this only when you test CH16
-#define SHADOW  // Activate this only when you test CH20, CH21, CH23
-#define SSAO    // Activate this only when you test CH21, CH23
 
 struct InstanceData
 {
@@ -58,16 +55,18 @@ struct PassConstants
 
     DirectX::XMFLOAT4 AmbientLight = { 0.0f, 0.0f, 0.0f, 1.0f };
 
+#ifdef FOG
+    DirectX::XMFLOAT4 FogColor = { 0.7f, 0.7f, 0.7f, 1.0f };
+    float gFogStart = 5.0f;
+    float gFogRange = 150.0f;
+    DirectX::XMFLOAT2 cbPerObjectPad2;
+#endif
+
     // Indices [0, NUM_DIR_LIGHTS) are directional lights;
     // indices [NUM_DIR_LIGHTS, NUM_DIR_LIGHTS+NUM_POINT_LIGHTS) are point lights;
     // indices [NUM_DIR_LIGHTS+NUM_POINT_LIGHTS, NUM_DIR_LIGHTS+NUM_POINT_LIGHT+NUM_SPOT_LIGHTS)
     // are spot lights for a maximum of MaxLights per object.
     Light Lights[MaxLights];
-
-    DirectX::XMFLOAT4 FogColor = { 0.7f, 0.7f, 0.7f, 1.0f };
-    float gFogStart = 5.0f;
-    float gFogRange = 150.0f;
-    DirectX::XMFLOAT2 cbPerObjectPad2;
 };
 
 struct SsaoConstants
@@ -106,14 +105,8 @@ struct MaterialData
 
 struct Vertex
 {
-    Vertex() = default;
-    Vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v) :
-        Pos(x, y, z),
-        Normal(nx, ny, nz),
-        TexC(u, v) {}
-
     DirectX::XMFLOAT3 Pos;
-#ifdef CH7
+#ifdef COLOR
     DirectX::XMFLOAT4 Color;
 #else
     DirectX::XMFLOAT3 Normal;

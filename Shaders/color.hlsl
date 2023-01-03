@@ -6,9 +6,14 @@
 
 cbuffer cbPerObject : register(b0)
 {
+#ifdef CH7
     float4x4 gWorld;
+#else
+    float4x4 gWorldViewProj;
+#endif
 };
 
+#ifdef CH7
 cbuffer cbPass : register(b1)
 {
     float4x4 gView;
@@ -26,6 +31,7 @@ cbuffer cbPass : register(b1)
     float gTotalTime;
     float gDeltaTime;
 };
+#endif
 
 struct VertexIn
 {
@@ -44,9 +50,13 @@ VertexOut VS(VertexIn vin)
 	VertexOut vout;
 	
 	// Transform to homogeneous clip space.
-	float4 posW = mul(float4(vin.PosL, 1.0f), gWorld);
+#ifdef CH7
+    float4 posW = mul(float4(vin.PosL, 1.0f), gWorld);
     vout.PosH = mul(posW, gViewProj);
-	
+#else
+    vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);
+#endif
+
 	// Just pass vertex color into the pixel shader.
     vout.Color = vin.Color;
     

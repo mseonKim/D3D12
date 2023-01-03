@@ -4,6 +4,7 @@
 // Hold down '1' key to view scene in wireframe mode.
 //***************************************************************************************
 
+#include "Chapter.h"
 #include "../../Common/d3dApp.h"
 #include "../../Common/MathHelper.h"
 #include "../../Common/UploadBuffer.h"
@@ -515,8 +516,14 @@ void ShapesApp::BuildRootSignature()
 
 void ShapesApp::BuildShadersAndInputLayout()
 {
-	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\color.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\color.hlsl", nullptr, "PS", "ps_5_1");
+    const D3D_SHADER_MACRO defines[] =
+    {
+        "CH7", "1",
+        NULL, NULL
+    };
+
+	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\color.hlsl", defines, "VS", "vs_5_1");
+	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\color.hlsl", defines, "PS", "ps_5_1");
 	
     mInputLayout =
     {
